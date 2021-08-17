@@ -35,7 +35,7 @@ wmat = function(iter){
 
 # Log-return function 
 returns = function(x){
-  return(log(x) - log(lag(x)))
+  return(diff(log(x), lag = 1))
 }
 
 # Extracting epsilon function
@@ -104,9 +104,9 @@ quantmod::getSymbols("T10YIE", src = "FRED")
 ### XTS to tibble and Data Transforming 
 
 s11 = zoo::na.locf(timetk::tk_tbl(USD3MTD156N))
-s11$USD3MTD156N = rollapply(s11$USD3MTD156N, width = 22, FUN = sd, fill = NA)
+s11$USD3MTD156N = zoo::rollapply(s11$USD3MTD156N, width = 22, FUN = sd, fill = NA)
 s12 = zoo::na.locf(timetk::tk_tbl(ECBMLFR))
-s12$ECBMLFR = rollapply(s12$ECBMLFR, width = 22, FUN = sd, fill = NA)
+s12$ECBMLFR = zoo::rollapply(s12$ECBMLFR, width = 22, FUN = sd, fill = NA)
 s13 = zoo::na.locf(timetk::tk_tbl(T3MFF))
 s13$T3MFF = abs(s13$T3MFF)
 
@@ -118,7 +118,7 @@ s13$T3MFF = abs(s13$T3MFF)
 
 s21 = zoo::na.locf(timetk::tk_tbl(TEDRATE))
 s22 = zoo::na.locf(timetk::tk_tbl(AAAFF))
-s22$AAAFF = rollapply(s22$AAAFF, width = 22, FUN = sd, fill = NA)
+s22$AAAFF = zoo::rollapply(s22$AAAFF, width = 22, FUN = sd, fill = NA)
 s23 = zoo::na.locf(timetk::tk_tbl(T10Y2Y))
 s23$T10Y2Y = rollapply(s23$T10Y2Y, width = 22, FUN = sd, fill = NA)
 
@@ -130,13 +130,13 @@ s23$T10Y2Y = rollapply(s23$T10Y2Y, width = 22, FUN = sd, fill = NA)
 
 s31 = zoo::na.locf(timetk::tk_tbl(NASDAQCOM))
 date_s31 = as.Date(s31$index)[2:length(s31)]
-s31$NASDAQCOM = rollapply(returns(s31$NASDAQCOM), width = 22, FUN = sd, fill = NA)
+s31$NASDAQCOM = zoo::rollapply(TTR::ROC(s31$NASDAQCOM), width = 22, FUN = sd, fill = NA)
 date_s32 = as.Date(s31$index) # CMAX
 s32 = dplyr::bind_cols(date_s32, cmax(s31$NASDAQCOM, windows = 170))
 colnames(s32) = c("index", "cmax_s32")
 s33_bis = dplyr::full_join(s13, s31, by = "index")
 s33 = s33_bis %>%
-  dplyr::mutate(roll = roll::roll_cor(T3MFF, NASDAQCOM, width = 22 * 12)) %>%
+  dplyr::mutate(roll = roll::roll_cor(T3MFF, TTR::ROC(NASDAQCOM), width = 22 * 12)) %>%
   dplyr::select(index, roll)
 
 # Checking s3
@@ -153,7 +153,7 @@ s42_bis1$NASDAQCOM = returns(s42_bis1$NASDAQCOM)
 s42_bis = dplyr::full_join(s42_bis1, s42, by = "index")
 s42_bis = zoo::na.locf(s42_bis)
 date = as.Date(s42_bis$index)
-s42$`Index Value` = rollapply(returns(s42$`Index Value`), width = 22, FUN = sd, fill = NA)
+s42$`Index Value` = rollapply(TTR::ROC(s42$`Index Value`), width = 22, FUN = sd, fill = NA)
 s43 = dplyr::bind_cols(date, idiosyncratique(x = s42_bis$`Index Value`, y = s42_bis$NASDAQCOM))
 colnames(s43) = c("index", "extraret")
 
@@ -163,11 +163,11 @@ colnames(s43) = c("index", "extraret")
 #plot(s43$extraret, type = 'l')
 
 s51 = zoo::na.locf(timetk::tk_tbl(DEXUSEU))
-s51$DEXUSEU = rollapply(s51$DEXUSEU, width = 22, FUN = sd, fill = NA)
+s51$DEXUSEU = zoo::rollapply(TTR::ROC(s51$DEXUSEU), width = 22, FUN = sd, fill = NA)
 s52 = zoo::na.locf(timetk::tk_tbl(DEXJPUS))
-s52$DEXJPUS = rollapply(s52$DEXJPUS, width = 22, FUN = sd, fill = NA)
+s52$DEXJPUS = zoo::rollapply(TTR::ROC(s52$DEXJPUS), width = 22, FUN = sd, fill = NA)
 s53 = zoo::na.locf(timetk::tk_tbl(DEXUSUK))
-s53$DEXUSUK = rollapply(s53$DEXUSUK, width = 22, FUN = sd, fill = NA)
+s53$DEXUSUK = zoo::rollapply(TTR::ROC(s53$DEXUSUK), width = 22, FUN = sd, fill = NA)
 
 # Checking S5
 #plot(s51$DEXUSEU, type = "l")
@@ -175,11 +175,11 @@ s53$DEXUSUK = rollapply(s53$DEXUSUK, width = 22, FUN = sd, fill = NA)
 #plot(s53$DEXUSUK, type = "l")
 
 s61 = zoo::na.locf(timetk::tk_tbl(gold))[, 1:2]
-s61$`USD (AM)` = rollapply(returns(s61$`USD (AM)`), width = 22, FUN = sd, fill = NA)
+s61$`USD (AM)` = zoo::rollapply(returns(s61$`USD (AM)`), width = 22, FUN = sd, fill = NA)
 s62 = zoo::na.locf(timetk::tk_tbl(DCOILWTICO))
-s62$DCOILWTICO = rollapply(s62$DCOILWTICO, width = 22, FUN = sd, fill = NA)
+s62$DCOILWTICO = zoo::rollapply(s62$DCOILWTICO, width = 22, FUN = sd, fill = NA)
 s63 = zoo::na.locf(timetk::tk_tbl(T10YIE))
-s63$T10YIE = rollapply(s63$T10YIE, width = 22, FUN = sd, fill = NA)
+s63$T10YIE = zoo::rollapply(s63$T10YIE, width = 22, FUN = sd, fill = NA)
 
 # Checking S6
 #plot(s61$`USD (AM)`, type = "l")
@@ -213,20 +213,20 @@ colnames(s00) = c("date", "s11", "s12", "s13",
                  "s51", "s52", "s53", 
                  "s61", "s62", "s63")
 
+s00 = zoo::na.locf(s00)
+s00 = na.omit(zoo::na.locf(s00))
+date = s00$date
 
-S00 = na.omit(zoo::na.locf(s00))
-date = S00$date
-
-S0 = subset(S00, select = -date)
-ranked = apply(s0, 2, dplyr::dense_rank)
+S0 = subset(s00, select = -date)
+ranked = apply(S0, 2, dplyr::dense_rank)
 
 # Mean each markets
-S1 = rowMeans(S0[, 1:3])
-S2 = rowMeans(S0[, 4:6])
-S3 = rowMeans(S0[, 7:9])
-S4 = rowMeans(S0[, 10:12])
-S5 = rowMeans(S0[, 13:15])
-S6 = rowMeans(S0[, 16:18])
+S1 = rowMeans(ranked[, 1:3])
+S2 = rowMeans(ranked[, 4:6])
+S3 = rowMeans(ranked[, 7:9])
+S4 = rowMeans(ranked[, 10:12])
+S5 = rowMeans(ranked[, 13:15])
+S6 = rowMeans(ranked[, 16:18])
 
 data = dplyr::bind_cols(date, S1, S2, S3, S4, S5, S6)
 colnames(data) = c("date", "S1", "S2", "S3", "S4", "S5", "S6")
