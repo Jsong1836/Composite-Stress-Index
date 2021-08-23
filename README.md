@@ -14,4 +14,7 @@ this index includes commodity market as a source of financial stress. "S" symbol
 "S5": Forex market 
 "S6": Commodity market 
 
-For now, 3 sub-index of stress for each market are selected based on correlation and impulse response analysis. 
+For now, 3 sub-indexes of stress for each market are selected based on correlation and impulse response analysis (VAR, VECM). Hence, 3 sub-indexes of 
+6 segments of financial market requires 18 sub-indexes. 
+
+
