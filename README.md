@@ -1,4 +1,5 @@
 # Composite-Stress-Index
+
 This index was calculated by following the general method of the European Central Bank's Composite 
 index of systemic stress index available on European Central bank's statistical warehouse as CISS. Data import
 process is automatized by "Quantmod" and "Qunadl" where there are three main data sources (Fred, Yahoo, Quandl). 
