@@ -5,7 +5,8 @@ index of systemic stress index available on European Central bank's statistical 
 process is automatized by "Quantmod" and "Qunadl" where there are three main data sources (Fred, Yahoo, Quandl). 
 Since these data sources are free, this function can be used with different source of financial stress that 
 users think more efficient in order to capture financial stress. The main difference from the ECB's calculation, 
-this index includes commodity market as a source of financial stress. "S" symbol indicate a segment of financial market as follow:
+this index includes commodity market as a source of financial stress. 
+"S" symbol indicate a segment of financial market as follows:
 
 "S1" : Money market
 "S2" : Bond market
