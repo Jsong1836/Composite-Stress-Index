@@ -6,6 +6,7 @@ process is automatized by "Quantmod" and "Qunadl" where there are three main dat
 Since these data sources are free, this function can be used with different source of financial stress that 
 users think more efficient in order to capture financial stress. The main difference from the ECB's calculation, 
 this index includes commodity market as a source of financial stress. 
+
 "S" symbol indicate a segment of financial market as follows:
 
 "S1" : Money market
@@ -19,7 +20,7 @@ For now, 3 sub-indexes of stress for each market are selected based on correlati
 6 segments of financial market requires 18 sub-indexes by following rules:
 
 1. data avaiability, preferably daily or weekly 
-2. sub-indexes are constructed in a way that their correlation becomes high during a high market stress period and they can represent market-wide developments. A good example is Libor or Euribor that skyrocketed in August 2007 as a money market stress.
+2. sub-indexes are constructed in a way that their correlation becomes high during a high market stress period and they can represent market-wide developments. A good example is Libor or Euribor that skyrocketed in August 2007 that can be viewed as a money market dysfunction.
 3. all sub-indexes have sufficiently long historical data for statistical robustess.
 
 The main issue to calculate the composite stress index is data availability. Since european indexes start from 1999 and a series of crisis is rare events, it is hard to define when a crisis actually begun. Therefore, 2 or 3 regimes-switch models are used to recognize these regime changes. Because of ths index's statistical design, a high market stress can distort the previous shape, which can be interpreted as higher market stress than historical market stress. 
